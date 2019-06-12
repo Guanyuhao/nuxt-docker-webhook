@@ -74,7 +74,8 @@ app.post('/webhooks', function(req, res) {
 
 app.post('/command', function(req, res) {
   // 如果必要的话可以进行更严格的鉴权，这里只是一个示范
-  if (req.headers['access_token'] === 'b65c19b95906e027c5d8') {
+  // guanyuhao md5
+  if (req.headers['access_token'] === 'f2d05d54731143271f1f6ea5dc7daccc') {
     // 执行命令，并返回命令的执行结果
     execCommand(req.body.command, req.body.reBuild, function(
       error,

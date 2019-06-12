@@ -1,7 +1,7 @@
 
 const baseUrl = (() => {
   if(process.env.NODE_ENV === 'production') {
-    return process.env.API_URL || 'http://192.168.1.233:7901/lensLabel'
+    return process.env.API_URL
   } else {
     return '/api';
   }
