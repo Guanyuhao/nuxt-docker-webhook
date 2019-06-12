@@ -1,0 +1,187 @@
+@import "./vars";
+/* element  reset*/
+  /* input */
+.el-input__inner{
+  border-color:#BDC7D4;
+  border-radius: 2px;
+  color: #000000cc;
+}
+
+.el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus{
+  border-color: #BDC7D4;
+}
+.el-form-item.is-error .el-input__inner, .el-form-item.is-error .el-input__inner:focus, .el-form-item.is-error .el-textarea__inner, .el-form-item.is-error .el-textarea__inner:focus, .el-message-box__input input.invalid, .el-message-box__input input.invalid:focus{
+  border-color: $red;
+}
+.el-input-group__append, .el-input-group__prepend{
+  border-color:#BDC7D4;
+}
+  /*form */
+.el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
+  margin-bottom: 20px;
+}
+.isRequire>.el-form-item__label:before{
+    content: "*";
+    color: $red;
+    margin-right: 4px;
+}
+  /* radio */
+.el-radio{
+  font-weight: normal;
+  color: rgba($color: #000000, $alpha: 0.7);
+}
+.el-radio__input.is-checked .el-radio__inner{
+  border-color: $blue;
+  background: $white;
+}
+.el-radio__inner::after{
+  background: $blue;
+  border-color: $blue;
+  width: 7px;
+  height: 7px;
+}
+.el-radio__input.is-checked+.el-radio__label{
+  color: $blue;
+}
+  /*tooltip*/
+.el-tooltip__popper.is-dark {
+  background: #69768A
+}
+.el-tooltip__popper[x-placement^="top"] .popper__arrow{
+  border-bottom-width: 0;
+  border-top-color: #69768A;
+  &:after{
+    border-bottom-width: 0;
+    border-top-color: #69768A;
+  }
+}
+  /* ---button--- */
+.el-button--small{
+  font-size: 14px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.el-button--default:hover{
+  border-color: $blue;
+  color: $blue;
+  background: unset;
+}
+.el-button--primary{
+  background: $blue;
+  border-color: $blue;
+}
+.el-button--primary:focus,.el-button--primary:hover{
+  background: $blue;
+  border-color: $blue;
+  background: $blue;
+  color: #ffffff;
+}
+
+.el-button.is-disabled{
+  color: rgba($color: #000000, $alpha: 0.3);
+}
+/* ---el-tag--- */
+  /* --type setting--*/
+  .el-tag--setting{
+    background: #EDEDED;
+    border-color: #EDEDED;
+    border-radius:1px;
+    color: rgba($color: #000000, $alpha: 0.6)
+  }
+ /* select */
+.el-select-dropdown__item{
+  max-width: 376px;
+  overflow: hidden;
+  span{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+.el-select-dropdown__item.selected{
+  font-weight: normal;
+  color: $blue;
+}
+/* textarea */
+.el-textarea .el-textarea__inner{
+  font-family: inherit;
+  resize:none;
+  border-color:#BDC7D4;
+  &::-webkit-scrollbar-track {
+    box-shadow: none;
+    border-radius: 1px;
+    background-color: #F5F5F5;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: rgba(144,147,153,.3);
+  }
+
+}
+  /* el-checkout*/
+.el-checkbox__input.is-checked+.el-checkbox__label{
+  color: $blue;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+  background: $blue;
+  border-color: $blue;
+}
+
+  /*el-badge*/
+.el-badge__content{
+  border: none;
+}
+/* el-message-box__btns*/
+.el-message-box{
+  padding: 20px 10px 34px 10px;
+}
+.el-message-box__title{
+  text-align: center;
+}
+.el-message-box__content{
+  .el-icon-warning{
+    position: absolute;
+    top: -19px;
+    left: 154px;
+    color: #ffad06;
+  }
+  .el-message-box__message{
+    text-align: center;
+  }
+}
+.el-message-box__btns{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row-reverse;
+}
+.el-message-box__btns button:nth-child(2){
+  margin-left: 0px;
+  margin-right: 10px;
+}
+.el-message-box__headerbtn{
+  font-size: 20px;
+  top: 0;
+  .el-icon-close{
+    color: #333333;
+  }
+}
+.el-message-box__title{
+  padding-left: 10px;
+}
+.el-message-box__status+.el-message-box__message {
+  padding-left: 0;
+  padding-right: 0;
+}
+.el-message-box__headerbtn:focus .el-message-box__close, .el-message-box__headerbtn:hover .el-message-box__close {
+  color: #333333;
+}
+
+/* icon */
+.el-dialog__headerbtn .el-dialog__close {
+  color: #333333;
+}
+/* dialog*/
+.el-dialog__headerbtn:focus .el-dialog__close, .el-dialog__headerbtn:hover .el-dialog__close {
+  color: #333333;
+}
