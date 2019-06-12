@@ -40,13 +40,14 @@ app.get('*', function(req, res, next) {
 // 订阅来自 git 服务器 的 Webhooks 请求（post 类型）
 app.post('/webhooks', function(req, res) {
   // 使用 secret token 对该 API 的调用进行鉴权, 详细文档: https://developer.github.com/webhooks/securing/
-  const SECRET_TOKEN = 'b65c19b95906e027c5d8';
+  const SECRET_TOKEN = 'guanyuhao';
   // 计算签名
   const signature = `sha1=${crypto
     .createHmac('sha1', SECRET_TOKEN)
     .update(JSON.stringify(req.body))
     .digest('hex')}`;
   // 验证签名和 Webhooks 请求中的签名是否一致
+  console.log(signature)
   const isValid = signature === req.headers['x-hub-signature'];
   // 如果验证通过，返回成功状态并更新服务
   if (isValid) {
@@ -145,7 +146,7 @@ function createServer() {
  * 从 git 服务器拉取最新代码，更新 npm 依赖，并重新构建项目
  */
 function upgrade() {
-  execCommand('git pull -f && npm install', true);
+  execCommand('git pull origin master && npm install', true);
 }
 
 /**
