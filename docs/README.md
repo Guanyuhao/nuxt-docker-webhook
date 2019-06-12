@@ -49,7 +49,6 @@ TO BE DONE...
 
 * [Webpack](https://webpack.js.org/): 前端打包工具
 * [Babel](https://babeljs.io/): JS编译工具
-* [Ava](https://github.com/avajs/ava): 测试框架
 * [Gitbook](https://www.gitbook.com/): 文档管理
 * [VSCode](https://code.visualstudio.com/): 推荐使用的编辑器
 

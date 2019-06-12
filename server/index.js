@@ -129,8 +129,9 @@ function createServer() {
   app.use(function() {
     render.apply(this, arguments);
   });
+
   // 启动服务
-  server = app.listen(port, function(error) {
+  server = app.listen(port,'0.0.0.0',function(error) {
     if (error) {
       return;
     }
