@@ -1,7 +1,7 @@
 
 const baseUrl = (() => {
   if(process.env.NODE_ENV === 'production') {
-    return process.env.API_URL
+    return process.env.API_URL || 'http://biaozhu.elensdata.com/lensLabel'
   } else {
     return '/api';
   }
