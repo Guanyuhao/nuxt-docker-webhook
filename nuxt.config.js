@@ -14,6 +14,7 @@ const proxy = (()=>{
     return true;
   }
 })();
+
 console.log(process.env.NODE_ENV,baseUrl,proxy)
 
 module.exports = {
@@ -35,7 +36,8 @@ module.exports = {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  // loading: { color: '#fff' },
+  loading: false,
   /*
   ** Global CSS
   */

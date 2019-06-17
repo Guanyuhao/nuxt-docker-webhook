@@ -31,7 +31,7 @@ export default ({ store, redirect, route })=>{
   if(process.client){
     if(isAuth){
       store.dispatch("GET_ROLE",{
-        userId:getCookie("userId")
+        userId: getCookie("userId")
       });
       if(!store.state.userRole){
         return

@@ -17,10 +17,11 @@ RUN echo "$ssh_prv_key" > /root/.ssh/github_id_rsa && \
 # 修改私钥的用户权限
 RUN chmod 600 /root/.ssh/github_id_rsa
 # 克隆远端 git 仓库代码到工作区，注意最后的 . 不能省略
-RUN git clone git@github.com:HaoChuan9421/webhooks-nuxt-demo.git .
+RUN git clone git@github.com:Guanyuhao/nuxt-docker-webhook.git .
 # 安装依赖
 RUN npm install
 # 对外暴露 3000 端口
 EXPOSE 3000
 # 启动时的执行脚本
 CMD npm start
+
