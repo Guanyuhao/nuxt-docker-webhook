@@ -191,6 +191,7 @@ export default {
 <style lang="scss" scoped>
 .demo{
   height: 100%;
+  overflow: hidden;
   .image-warpper{
     height: 700px;
     overflow: auto;

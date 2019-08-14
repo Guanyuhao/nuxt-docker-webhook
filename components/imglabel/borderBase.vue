@@ -1,80 +1,87 @@
 <template>
   <div class="v-boderbase">
-    <svg id="imgSvg" v-if="baseImg" :width="baseImg.width" :height="baseImg.height" preserveAspectRatio="xMinYMin meet"  style="cursor: crosshair;">
-      <image :xlink:href="baseImg.url"
-        :width="baseImg.width"
-        :height="baseImg.height"
-         style="opacity: 0.8;"
-      ></image>
-      <g v-for="(item,index) in lableObj"
-        style="opacity:1;"
-        :key="index"
-        :data-index='index'
-        :class="[item.svgFont?'stopDraw':'','group_'+index]"
-        >
-        <path
-          :d="item.d"
-          :fill="item.fill"
-          :fill-opacity="item['fill-opacity']"
-          stroke-width="4"
-          :stroke="item.stroke"
-          :data-index='index'>
-        </path>
-        <g v-if="item.text" :data-index='index'>
-          <defs>
-            <filter x="0" y="0" width="1" height="1" :id="'bg'+index">
-              <feFlood :flood-color="item.stroke"></feFlood>
-              <feComposite in="SourceGraphic"></feComposite>
-            </filter>
-          </defs>
-          <text
-            :filter="'url(#bg'+index+')'"
-            :x="item.text.x"
-            :y="item.text.y"
-            class="svgFont stopDraw"
-          >&nbsp;{{item.text.txt}}&nbsp;
-          </text>
+    <div class="svg-wrapper">
+       <svg id="imgSvg" :class="!dragSvg?'crosshair':'pointer'"  v-if="baseImg" :width="baseImg.width" :height="baseImg.height" preserveAspectRatio="xMinYMin meet"  >
+        <image :xlink:href="baseImg.url"
+          :width="baseImg.width"
+          :height="baseImg.height"
+          style="opacity: 0.8;"
+        ></image>
+        <g v-for="(item,index) in lableObj"
+          style="opacity:1;"
+          :key="index"
+          :data-index='index'
+          :class="[item.svgFont?'stopDraw':'','group_'+index]"
+          >
+          <path
+            :d="item.d"
+            :fill="item.fill"
+            :fill-opacity="item['fill-opacity']"
+            stroke-width="2"
+            :stroke="item.stroke"
+            :data-index='index'
+            :class="item.svgFont?'mouse--move':''">
+          </path>
+          <g v-if="item.text" :data-index='index' class="stopDraw">
+            <defs>
+              <filter x="0" y="0" width="1" height="1" :id="'bg'+index">
+                <feFlood :flood-color="item.stroke"></feFlood>
+                <feComposite in="SourceGraphic"></feComposite>
+              </filter>
+            </defs>
+            <text
+              :filter="'url(#bg'+index+')'"
+              :x="item.text.x"
+              :y="item.text.y"
+              class="svgFont stopDraw"
+              :data-index='index'
+            >&nbsp;{{item.text.txt}}&nbsp;
+            </text>
+          </g>
           <g
-            v-show="item.text.svgCloseStyle"
+            v-show="item.svgFont && item.text.svgCloseStyle && false"
             :class="['svg-icon--close stopDraw','svgCloseStyle_'+index]"
             :data-index='index'>
             <svg
-            class="icon stopDraw"
-            viewBox="0 0 1024 1024"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            p-id="1161"
-            width="21"
-            height="21"
-            ><path
-              :filter="'url(#bg'+index+')'"
-              d="M512 1024C228.072727 1024 0 795.927273 0 512S228.072727 0 512 0s512 228.072727 512 512-228.072727 512-512 512z m0-46.545455c256 0 465.454545-209.454545 465.454545-465.454545S768 46.545455 512 46.545455 46.545455 256 46.545455 512s209.454545 465.454545 465.454545 465.454545z m0-514.327272l148.945455-148.945455c13.963636-13.963636 34.909091-13.963636 48.872727 0 13.963636 13.963636 13.963636 34.909091 0 48.872727L560.872727 512l148.945455 148.945455c13.963636 13.963636 13.963636 34.909091 0 48.872727-13.963636 13.963636-34.909091 13.963636-48.872727 0L512 560.872727l-148.945455 148.945455c-13.963636 13.963636-34.909091 13.963636-48.872727 0-13.963636-13.963636-13.963636-34.909091 0-48.872727l148.945455-148.945455-148.945455-148.945455c-13.963636-13.963636-13.963636-34.909091 0-48.872727 13.963636-13.963636 34.909091-13.963636 48.872727 0l148.945455 148.945455z"
-              fill="#ffffff"
-              fill-opacity='0.75'
-              p-id="1162"
-              class="stopDraw">
+              class="icon stopDraw"
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              width="21"
+              height="21"
+            >
+              <path
+                :filter="'url(#bg'+index+')'"
+                d="M512 1024C228.072727 1024 0 795.927273 0 512S228.072727 0 512 0s512 228.072727 512 512-228.072727 512-512 512z m0-46.545455c256 0 465.454545-209.454545 465.454545-465.454545S768 46.545455 512 46.545455 46.545455 256 46.545455 512s209.454545 465.454545 465.454545 465.454545z m0-514.327272l148.945455-148.945455c13.963636-13.963636 34.909091-13.963636 48.872727 0 13.963636 13.963636 13.963636 34.909091 0 48.872727L560.872727 512l148.945455 148.945455c13.963636 13.963636 13.963636 34.909091 0 48.872727-13.963636 13.963636-34.909091 13.963636-48.872727 0L512 560.872727l-148.945455 148.945455c-13.963636 13.963636-34.909091 13.963636-48.872727 0-13.963636-13.963636-13.963636-34.909091 0-48.872727l148.945455-148.945455-148.945455-148.945455c-13.963636-13.963636-13.963636-34.909091 0-48.872727 13.963636-13.963636 34.909091-13.963636 48.872727 0l148.945455 148.945455z"
+                fill="#ffffff"
+                fill-opacity='0.75'
+                :p-id="index"
+                class="stopDraw svg-icon--close--path">
               </path>
-          </svg>
+            </svg>
+          </g>
+          <g :data-index='index'>
+            <circle
+              v-for="(c,j) in lableObj[index].circle"
+              :cx="c.cx"
+              :cy="c.cy"
+              r="4"
+              :fill="item.stroke"
+              stroke="transparent"
+              stroke-width="8"
+              :class="['circle_'+index+'_'+j,
+                        'drag','Stretch',item.svgFont?'mouse--move':(j%2===0?'seResize':'neResize'),
+                        c.animation?'text_animation':''
+                      ]"
+              :circle-index='j'
+              :data-index='index'
+              >
+            </circle>
           </g>
         </g>
-        <g :data-index='index'>
-          <circle
-            v-for="(c,j) in lableObj[index].circle"
-            :cx="c.cx"
-            :cy="c.cy"
-            r="5"
-            :fill="item.stroke"
-            stroke="transparent"
-            stroke-width="20"
-            :class="['circle_'+index+'_'+j,'drag','Stretch']"
-            :circle-index='j'
-            :data-index='index'
-            >
-          </circle>
-        </g>
-      </g>
-    </svg>
-
+      </svg>
+    </div>
+    <!-- <img v-if="baseImg" id="cropTestImg" :src="baseImg.url" :width="baseImg.width" :height="baseImg.height" /> -->
   </div>
 </template>
 <script>
@@ -88,6 +95,10 @@ export default {
     labelText: {
       type: String,
       default: 'text'
+    },
+    colorIndex: {
+      type: Number,
+      default: 0
     }
   },
   components: {
@@ -98,13 +109,25 @@ export default {
       lableObj: [],
       isReactLabel: true,
       // colorConfig:['yellow','cyan','magenta','springgreen','tomato','deepskyblue','orange'],
-      colorConfig:['red'],
+      // colorConfig:['red'],
+      colorConfig:['#EAEBFF',"#FAE7E7",'#FFEDC3',"#DFEEE7","#DBEFF7"],
       pathArr: [], // 存储PathArr
       labelTagArr: [],
-      baseImg: null,
+      baseImg: {
+        width: 0,
+        height: 0,
+      },
       // 图形操作状态
       operateingState: false,
-      zomm: 0
+      zomm: 0,
+      // colorArr: [
+      //   { color: "#525DD7", background: "#EAEBFF" },
+      //   { color: "#97183E", background: "#FAE7E7" },
+      //   { color: "#A95508", background: "#FFEDC3" },
+      //   { color: "#22894B", background: "#DFEEE7" },
+      //   { color: "#086B91", background: "#DBEFF7" },
+      // ],
+      dragSvg: false
     }
   },
   created(){
@@ -113,6 +136,9 @@ export default {
   },
   mounted() {
 
+  },
+  destroyed(){
+    this.removeSVGEvent()
   },
   methods: {
     init(){
@@ -123,11 +149,82 @@ export default {
     getLabelObjArr(){
       return this.lableObj
     },
+    getPathArr(){
+      return this.pathArr
+    },
+    controlDragSvg(drag){
+      if(drag){
+        this.removeSVGEvent()
+        this.dragSvgEvent()
+      }else{
+        this.reloadBaseEvent()
+      }
+      this.dragSvg = drag
+    },
     setImg(obj){
       // this.baseImg = null
       this.baseImg = {}
       // url width height
       Object.assign(this.baseImg,obj)
+      let imgSvg = document.getElementById('imgSvg')
+      if(imgSvg && imgSvg.style.transform){
+
+        imgSvg.style.transform = null;
+      }
+    },
+    fixImgSize(w,h,fun){
+      this.baseImg.width = w
+      this.baseImg.height = h
+      if(this.lableObj.length > 0){
+        if(typeof fun === 'function'){
+          this.fixLabelObj(fun)
+        }
+      }
+      this.$forceUpdate()
+
+    },
+    fixLabelObj(fun){
+      //Add 移动过的path全部进行fix
+      let imgSvg = document.getElementById('imgSvg')
+      // 兼容移动需要
+      // this.pathArr = this.pathArr.map(path=>{
+      //   return path.map(point=>{
+      //     if(drag){
+      //       return point*1.1
+      //     }else{
+      //       return point/1.1
+      //     }
+      //   })
+      // })
+      this.lableObj.forEach((item,index)=>{
+        if(item.transformPoint){
+          this.fixTranformPosition(item,index)
+          let groupSvg = imgSvg.getElementsByClassName(`group_${index}`)[0]
+          groupSvg.style.transform = `translate(${0}px, ${0}px)`;
+        }
+        item.circle.forEach(circle=>{
+          circle.cx = fun(circle.cx)
+          circle.cy = fun(circle.cy)
+        })
+        this.pathArr[index] = this.pathArr[index].map(point=>{
+          return fun(point)
+        })
+        item.d = this.polygon2path(this.pathArr[index])
+        if(item.shape_type === 'rectangle'){
+          // scale text 位置便宜问题
+          // console.log(this.pathArr[index].filter((point,index)=>(index%2===0)))
+          item.text.x = Math.min(...this.pathArr[index].filter((point,index)=>(index%2===0)));
+          item.text.y = Math.min(...this.pathArr[index].filter((point,index)=>(index%2!==0)))-6;
+        }else{
+          item.text.x = fun(item.text.x)
+          item.text.y = fun(item.text.y)
+        }
+
+      })
+      // 阶级上次事件中 一些数据缓存值 重构针对该东西优化
+      if(!this.dragSvg){
+        this.reloadBaseEvent()
+      }
     },
     demoInit(){
       this.setImg({
@@ -137,12 +234,18 @@ export default {
       })
       this.init()
     },
-    openOperateingState(){
+    openOperateingState(drag){
       // 开启 图形标注状态
-      this.operateingState = true
+      this.operateingState = drag
+      if(!drag){
+        // this.$forceUpdate()
+      }else{
+        this.isReactLabel = true
+      }
     },
-    setLabelObj(obj){
+    setLabelObj(obj,pathArr){
       this.lableObj = obj
+      this.pathArr = pathArr
     },
     setTransform(isallowMoveIndex){
       let groupSvg = imgSvg.getElementsByClassName(`group_${isallowMoveIndex}`)[0]
@@ -155,6 +258,21 @@ export default {
     // 不规则标注
     irregularLabeling(){
       this.isReactLabel = false
+    },
+    reloadBaseEvent(){
+      let imgSvg = document.getElementById('imgSvg')
+
+      if(!imgSvg){
+        return
+      }
+      imgSvg.onmousedown = null
+      imgSvg.onmouseup = null
+      imgSvg.onmousemove = null
+      imgSvg.onmouseleave = null
+      imgSvg.onmouseenter = null
+      imgSvg.click = null
+      imgSvg.ondblclick = null
+      this.baseEvent()
     },
     // base Event
     baseEvent(){
@@ -181,6 +299,7 @@ export default {
       // 绘制状态
       let stopDraw = false // 禁止拖拽
       let Stretch = false // 拉伸功能
+      let isDoubleAutoClose = false // 双击自动闭合不规则标签
       let isStretchIndex = 0
       // 监控对象变更 控制dom操作
       let pathProxy = new Proxy({},{
@@ -204,27 +323,14 @@ export default {
         m_down_y = event.offsetY
         let dom = event.target
             ,classList = dom.classList
-        if(classList.contains('stopDraw')){
+
+        if(classList.contains('stopDraw') && !classList.contains('svgFont')){
           stopDraw = true
           return
         }
         stopDraw = false
         // click 选中不继续
-
-        if(classList.contains('Stretch')){
-          // 拉伸
-          pathProxy.Stretch = true
-          console.log(event.target)
-          isStretchIndex = dom.getAttribute('data-index')
-          pathProxy.StretchX = dom.getAttribute('cx')
-          pathProxy.StretchY = dom.getAttribute('cy')
-          pathProxy.isCricleIndex = dom.getAttribute('circle-index')
-          // console.log(this.pathArr[isStretchIndex],isCricleIndex,dom.getAttribute('cx'),dom.getAttribute('cy'))
-          Stretch = true
-          return
-        }
-        Stretch = false
-        if(dom.getAttribute('data-index') && this.lableObj[dom.getAttribute('data-index')].svgFont){
+        if(dom.getAttribute('data-index') && (this.lableObj[dom.getAttribute('data-index')].svgFont || classList.contains('svgFont'))){
           isallowMove = true
           // isallowMove = false
           t_down_x = event.offsetX
@@ -232,6 +338,21 @@ export default {
           isallowMoveIndex = dom.getAttribute('data-index')
           return
         }
+        if(classList.contains('Stretch')){
+          // 拉伸
+          pathProxy.Stretch = true
+          isStretchIndex = dom.getAttribute('data-index')
+          pathProxy.StretchX = dom.getAttribute('cx')
+          pathProxy.StretchY = dom.getAttribute('cy')
+          pathProxy.isCricleIndex = dom.getAttribute('circle-index')
+          // console.log(this.pathArr[isStretchIndex],isCricleIndex,dom.getAttribute('cx'),dom.getAttribute('cy'))
+          Stretch = true
+          if(pathProxy.startIrregular){
+            Stretch = false
+          }
+          return
+        }
+        Stretch = false
         // !isClick
         // react 操作流程 需要点击2次 结束绘画
         // 第一次点击开始绘画
@@ -251,6 +372,10 @@ export default {
             //   isGoReactLable = false;
             //   return
             // }
+            // 图形挥着开始关闭 移动状态
+            isallowMove = false
+            pathProxy.moveTransform = null
+
             pathProxy.startReactDraw = true
             pathProxy.starReactTime = +new Date()
             pathProxy.reactFirstArr = [rectX,rectY]
@@ -288,7 +413,7 @@ export default {
         pathProxy.stopMoveEvent = true
 
       }
-       imgSvg.onmouseenter = ()=>{
+      imgSvg.onmouseenter = ()=>{
         pathProxy.stopMoveEvent = false
       }
       imgSvg.onmousemove = () => {
@@ -313,6 +438,7 @@ export default {
               // console.log(imgSvg.getElementsByClassName(`group_${isallowMoveIndex}`)[0].style.transform)
               let groupSvg = imgSvg.getElementsByClassName(`group_${isallowMoveIndex}`)[0]
               let transformPoint = this.lableObj[isallowMoveIndex].transformPoint
+
               if(transformPoint){
                  transformX += transformPoint[0]
                  transformY += transformPoint[1]
@@ -324,13 +450,13 @@ export default {
               let MinX = Math.min(...cxArr)
               let MaxY = Math.max(...cyArr)
               let MinY = Math.min(...cyArr)
-              if(MinX+transformX  <= 0){
+              if(MinX+transformX  <= 5){
                 return
               }
               if(MaxX+transformX >= this.baseImg.width){
                 return
               }
-              if(MinY+transformY - 22 <= 0){
+              if(MinY+transformY - 22 <= 5){
                 return
               }
               if(MaxY+transformY >= this.baseImg.height){
@@ -352,7 +478,17 @@ export default {
           2. 利用一个跟随鼠标的原点 对角线点勾画
           3. 多边形勾画单独一个点
           */
+        // 解决  transformX isallowMove  拉伸不纯准确的问题 fix位置
+
          let currLabelObj = this.lableObj[isStretchIndex]
+        if(currLabelObj.transformPoint){
+          this.fixTranformPosition(currLabelObj,isStretchIndex)
+          pathProxy.moveTransform = null
+          // fix border tranform
+          let groupSvg = imgSvg.getElementsByClassName(`group_${isStretchIndex}`)[0]
+          groupSvg.style.transform = `translate(${0}px, ${0}px)`;
+
+        }
          let pathIndex = pathProxy.isCricleIndex*2
          let pathArr_item = this.pathArr[isStretchIndex]
          let StretchArr = []
@@ -395,8 +531,10 @@ export default {
                 let textX = pathArr_item[0]
                 let textY = pathArr_item[1]
                 /* 解决绘制过程中发生 move text坐标出现偏差 */
-                let diagonalX = pathProxy.reactArr[4]
-                let diagonalY = pathProxy.reactArr[3]
+                // let diagonalX = pathProxy.reactArr[4]
+                // let diagonalY = pathProxy.reactArr[3]
+                let diagonalX = pathArr_item[diagonal[pathIndex]]
+                let diagonalY = pathArr_item[diagonal[pathIndex]+1]
                 if(textX > diagonalX){
                   if(textY > diagonalY){
                     textX = diagonalX
@@ -479,36 +617,25 @@ export default {
         m_click_y = event.offsetY
         let dom = event.target
             ,classList = dom.classList
+
+        if(classList.contains('svg-icon--close--path')){
+            let index = dom.getAttribute('p-id')
+            this.delOneLabelObj(index)
+          return
+        }
         // click 选中不继续
         if(dom.getAttribute('data-index') && this.lableObj[dom.getAttribute('data-index')].svgFont){
+
           return
         }
 
-        if(classList.contains('stopDraw') || stopDraw){
+        // if(classList.contains('stopDraw') || stopDraw){
           // 不能继续绘图
-          if(classList.contains('drag')){
-            // 可以拖拽 既修改path 地址
-
-          }
           if(classList.contains('svgFont')){
-            // 文本点击 修改path fill 与 fill-opacity
-            let index = dom.parentNode.getAttribute('data-index')
-            let item = this.lableObj[index]
-            let {
-              stroke
-            } = item
-            if(!item.svgFont){
-              item.svgFont = true
-              item.fill = stroke
-              item['fill-opacity'] = '0.75'
-            }else{
-              item.svgFont = false
-              item.fill = 'none'
-              item['fill-opacity'] = '0'
-            }
+            return
           }
-          return
-        }
+          // return
+        // }
         if(isallowMove){
           return
         }
@@ -588,7 +715,9 @@ export default {
                 txt: this.labelText
               })
             }
-
+            if(this.operateingState){
+              this.$emit('cropImg')
+            }
             this.savePathd(pathProxy.reactArr)
             pathProxy.stopMoveEvent = false
             isClick = false
@@ -608,6 +737,11 @@ export default {
             pathProxy.Stretch = false
             return
           }
+          pathProxy.startIrregular = true
+          // 图形挥着开始关闭 移动状态
+          isallowMove = false
+          pathProxy.moveTransform = null
+
           pathProxy.circlePointArr = [[m_click_x,m_click_y]]
           isClick = true
 
@@ -628,6 +762,7 @@ export default {
           //  最后一次结束 画图
           let isLast = false
           // 超过3个点需要判读是否闭合 结束该不规则的多边形
+          isDoubleAutoClose = true
           if(pathProxy.circlePointArr.length >=3 ){
             let element = pathProxy.circlePointArr[0]
             let absx = [element[0] - area,element[0] + area]
@@ -641,6 +776,8 @@ export default {
             if(pathProxy.Stretch){
               pathProxy.Stretch = false
             }
+            isDoubleAutoClose = false
+            pathProxy.startIrregular = false
             let l = pathProxy.pointArr.length
             pathProxy.pointArr[l-1] = pathProxy.pointArr[1]
             pathProxy.pointArr[l-2] = pathProxy.pointArr[0]
@@ -658,6 +795,9 @@ export default {
               y: pathProxy.pointArr[1],
               txt: this.labelText
             })
+            let lastL = this.lableObj.length - 1
+            let circle = this.lableObj[lastL]['circle']
+            circle[0].animation = true
             this.savePathd(pathProxy.pointArr)
             // 清楚所有的状态
             pathProxy.pointArr = null
@@ -674,9 +814,11 @@ export default {
                 isGoCircle = false
               }
             }
+            pathProxy.isAutoDelCircle = false
             // 原点在不在误差范围之内
             if(isGoCircle){
               isPolyline = true
+              pathProxy.isAutoDelCircle = true
               // g.appendChild(newCircle)
               this.addLabelCricle({
                 cx: m_click_x,
@@ -688,14 +830,124 @@ export default {
 
         }
       }
+      // 不规则图形 双击自动闭合
+      imgSvg.ondblclick = ()=>{
+         let dom = event.target
+            ,classList = dom.classList
+        if(classList.contains('svgFont')){
+            // 文本点击 修改path fill 与 fill-opacity
+          let index = dom.parentNode.getAttribute('data-index')
+          let item = this.lableObj[index]
+          let {
+            stroke
+          } = item
+          if(!item.svgFont){
+            item.svgFont = true
+            item.fill = stroke
+            item['fill-opacity'] = '0.75'
+            if(!item.text.svgCloseStyle){
+              this.addClose(item.text,index)
+            }
+          }else{
+            item.svgFont = false
+            item.fill = 'none'
+            item['fill-opacity'] = '0'
+          }
+          this.$emit('setBtnState',this.lableObj)
+          return
+        }
+        if(!isDoubleAutoClose){
+          return
+        }
+        if(isDoubleAutoClose && pathProxy.circlePointArr.length >=3){
+          let l = pathProxy.pointArr.length
+          let lastL = this.lableObj.length - 1
+          let circle = this.lableObj[lastL]['circle']
+          if(pathProxy.isAutoDelCircle){
+            circle.pop()
+            pathProxy.circlePointArr.pop()
+            console.log(circle,'del')
+          }
+          circle[0].animation = true
+          pathProxy.pointArr.push(pathProxy.pointArr[0])
+          pathProxy.pointArr.push(pathProxy.pointArr[1])
+          // 增加是因为接下来他要为null
+          this.fixLabelObjPath(`${this.polygon2path(pathProxy.pointArr)}`)
+          this.addLabelObjText({
+            x: pathProxy.pointArr[0],
+            y: pathProxy.pointArr[1],
+            txt: this.labelText
+          })
+          this.savePathd(pathProxy.pointArr)
+          // 清楚所有的状态
+          pathProxy.pointArr = null
+          isClick = false
+          isDoubleAutoClose = false
+          pathProxy.startIrregular = false
+          pathProxy.Stretch = false
+        }
+      }
+    },
+    removeSVGEvent(){
+      let imgSvg = document.getElementById('imgSvg')
+      if(!imgSvg){
+        return
+      }
+      imgSvg.onmousedown = null
+      imgSvg.onmouseup = null
+      imgSvg.onmousemove = null
+      imgSvg.onmouseleave = null
+      imgSvg.onmouseenter = null
+      imgSvg.click = null
+      imgSvg.ondblclick = null
+    },
+    // drag svg
+    dragSvgEvent(){
+      //鉴于 base 中操作过多 现进行事件的重新绑定进行功能状态分离
+      let imgSvg = document.getElementById('imgSvg')
+      let m_down_x
+          ,m_down_y
+          ,m_move_y
+          ,m_move_x
+          ,isMove = false
+      let saveTransform = {
+        x: 0,
+        y: 0,
+      }
+      imgSvg.onmousedown = () => {
+        m_down_x = event.offsetX
+        m_down_y = event.offsetY
+        isMove = true
+        // console.log(event)
+      }
+      imgSvg.onmousemove = () => {
+        if(!isMove){
+          return
+        }
+        m_move_x = event.offsetX
+        m_move_y = event.offsetY
+        let transformX = m_move_x - m_down_x
+        let transformY = m_move_y - m_down_y
+        transformX += saveTransform.x
+        transformY += saveTransform.y
+        saveTransform = {
+          x: transformX,
+          y: transformY
+        }
+        imgSvg.style.transform = `translate(${transformX}px, ${transformY}px)`;
+      }
+      imgSvg.onmouseup = () => {
+        isMove = false
+      }
     },
     //
     // 自定义svg组 g
-    saveLabeObj(item){``
+    saveLabeObj(item){
       // 校验标注对象
       let colorConfig = this.colorConfig
-      let stroke = colorConfig[Math.floor(Math.random() * colorConfig.length)];
+      // let stroke = colorConfig[Math.floor(Math.random() * colorConfig.length)];
       // colorConfig.splice(colorConfig.indexOf(stroke),1);
+      let stroke = colorConfig[this.colorIndex];
       item.stroke = stroke
       item['fill-opacity'] = '0';
       item['fill'] = 'none';
@@ -709,9 +961,9 @@ export default {
     // 增加标注文字
     addLabelObjText(item){
       this.lableObj[this.lableObj.length-1]['text'] = item
-      // this.$nextTick(()=>{
-      //   this.addClose(item,this.lableObj.length-1)
-      // })
+      this.$nextTick(()=>{
+        this.addClose(item,this.lableObj.length-1)
+      })
     },
     addClose(item,index){
       let imgSvg = document.getElementById('imgSvg')
@@ -723,8 +975,12 @@ export default {
         y: textBox.y
       }
       this.lableObj[index]['text'] = item
-      svgCloseStyle.style.display = `unset`;
+      // svgCloseStyle.style.display = `unset`;
       svgCloseStyle.style.transform = `translate(${item.svgCloseStyle.x}px, ${item.svgCloseStyle.y}px)`;
+    },
+    delOneLabelObj(index){
+      this.lableObj.splice(index,1)
+      this.pathArr.splice(index,1)
     },
     // 文字存储
     saveLabelTagArr(item){
@@ -739,13 +995,70 @@ export default {
       this.pathArr.push(arr)
     },
     // del All label
-    delLabel(){
-      //
-      this.lableObj = []
+    delLabel(filter){
+      //filter 是否删除选中
+      if(filter){
+        let arr = []
+        this.lableObj.forEach((element, index) => {
+          if(element.svgFont){
+            arr.push(index)
+          }
+        })
+        this.lableObj = this.lableObj.filter((item,index)=>(!(arr.indexOf(index) > -1)));
+        this.pathArr = this.pathArr.filter((item,index)=>(!(arr.indexOf(index) > -1)));
+      }else{
+        this.lableObj = []
+        this.pathArr = []
+      }
       this.labelTagArr = []
-      this.pathArr = []
       // this.colorConfig = ['yellow','cyan','magenta','springgreen','tomato','deepskyblue','orange']
-
+      this.reloadBaseEvent()
+      // this.$emit('setBtnState')
+    },
+    // fix tranformlabel position
+    fixTranformPosition(item,index){
+      let obj = item
+      let path = this.mapTraformPath(obj)
+      item.d = path.d
+      item.circle = path.circle
+      item.text = this.mapTraformText(obj,index)
+      item.transformPoint = null
+      this.pathArr[index] = path.path
+    },
+    fixSvgCloseTag(index,svgCloseStyle){
+      // fix close tranform
+      let imgSvg = document.getElementById('imgSvg')
+      let groupSvg = imgSvg.getElementsByClassName(`group_${index}`)[0]
+      let closeDom = groupSvg.getElementsByClassName('svg-icon--close')[0]
+      closeDom.style.transform = `translate(${svgCloseStyle.x}px, ${svgCloseStyle.y}px)`;
+    },
+    mapTraformText(obj,index) {
+      let {
+        text,
+        transformPoint
+      } = obj
+      text.x += transformPoint[0]
+      text.y += transformPoint[1]
+      if(text.svgCloseStyle){
+        text.svgCloseStyle.x += transformPoint[0]
+        text.svgCloseStyle.y += transformPoint[1]
+        // this.fixSvgCloseTag(index,text.svgCloseStyle)
+      }
+      return text
+    },
+    mapTraformPath(obj) {
+      let {
+        transformPoint,
+        circle,
+      } = obj
+      let arr = circle.map(item => ([item.cx + transformPoint[0], item.cy + transformPoint[1]]))
+      circle = arr.map(element => ({cx: element[0],cy: element[1]}))
+      let arrOne = [].concat.apply([], arr)
+      return {
+        circle,
+        d: this.polygon2path(arrOne),
+        path: arrOne
+      }
     },
     /* svg base 方法 */
     // 创建svg 标签
@@ -836,6 +1149,182 @@ export default {
         }
         return [nWidth, nHeight]
     },
+    /*
+    // 裁剪 抠图 旋转 弃用
+    fnImageCropRot(){
+      //当前显示图片的高度和宽度
+      var baseImg = this.baseImg
+      var ID = (id)=>(document.getElementById(id));
+      var o = ID('cropTestImg')
+      var getCss = (o,key) =>{
+        return o.currentStyle? o.currentStyle[key] : document.defaultView.getComputedStyle(o,false)[key];
+      };
+      var iCurWidth = baseImg.width
+          , iCurHeight = baseImg.height
+      //获取实际图片的高宽
+      var oCreateImg = new Image();
+          oCreateImg.src = o.src;
+      var iOrigWidth = oCreateImg.width, iOrigHeight = oCreateImg.height;
+      if(iCurWidth && iOrigWidth){//如果宽度为不为0 - 意味着加载成功
+        //计算当前与实际的纵横比
+        var scaleX = iCurWidth / iOrigWidth;
+        var scaleY = iCurHeight / iOrigHeight;
+        //创建包裹div
+        var oRelDiv = document.createElement("div");
+        oRelDiv.style.position = "absolute";
+        oRelDiv.style.width = iCurWidth + "px";
+        oRelDiv.style.height = iCurHeight + 30 + "px";
+        oRelDiv.style.top = "30px";
+        o.parentNode.insertBefore(oRelDiv, o);
+        //初始化坐标与剪裁高宽
+        var cropW = 80, cropH = 80;
+        var posX = (iCurWidth - cropW)/2, posY = (iCurHeight - cropH)/2;
+        var sInnerHtml = '<div id="zxxCropBox" style="height:'+cropH+'px; width:'+cropW+'px; position:absolute; left:'+posX+'px; top:'+posY+'px; border:1px solid black;"><div id="zxxDragBg" style="height:100%; background:white; opacity:0.3; filter:alpha(opacity=30); cursor:move;"></div><div id="dragLeftTop" style="position:absolute; width:4px; height:4px; border:1px solid #000; background:white; overflow:hidden; left:-3px; top:-3px; cursor:nw-resize;"></div><div id="dragLeftBot" style="position:absolute; width:4px; height:4px; border:1px solid #000; background:white; overflow:hidden; left:-3px; bottom:-3px; cursor:sw-resize;"></div><div id="dragRightTop" style="position:absolute; width:4px; height:4px; border:1px solid #000; background:white; overflow:hidden; right:-3px; top:-3px; cursor:ne-resize;"></div><div id="dragRightBot" style="position:absolute; width:4px; height:4px; border:1px solid #000; background:white; overflow:hidden; right:-3px; bottom:-3px; cursor:se-resize;"></div><div id="dragTopCenter" style="position:absolute; width:4px; height:4px; border:1px solid #000; background:white; overflow:hidden; top:-3px; left:50%; margin-left:-3px; cursor:n-resize;"></div><div id="dragBotCenter" style="position:absolute; width:4px; height:4px; border:1px solid #000; background:white; overflow:hidden; bottom:-3px; left:50%; margin-left:-3px; cursor:s-resize;"></div><div id="dragRightCenter" style="position:absolute; width:4px; height:4px; border:1px solid #000; background:white; overflow:hidden; right:-3px; top:50%; margin-top:-3px; cursor:e-resize;"></div><div id="dragLeftCenter" style="position:absolute; width:4px; height:4px; border:1px solid #000; background:white; overflow:hidden; left:-3px; top:50%; margin-top:-3px; cursor:w-resize;"></div></div><input type="hidden" id="cropPosX" value="'+posX/scaleX+'" /><input type="hidden" id="cropPosY" value="'+posY/scaleY+'" /><input type="hidden" id="cropImageWidth" value="'+cropW/scaleX+'" /><input type="hidden" id="cropImageHeight" value="'+cropH/scaleY+'" />';
+        oRelDiv.innerHTML = sInnerHtml;
+      console.log(oRelDiv)
+
+        //拖拽与拉伸方法
+        //拖拽拉伸所需参数
+        var params = {
+          left: 0,
+          top: 0,
+          width:0,
+          height:0,
+          currentX: 0,
+          currentY: 0,
+          flag: false,
+          kind: "drag"
+        };
+        var startDrag = function(point, target, kind){
+          //point是拉伸点，target是被拉伸的目标，其高度及位置会发生改变
+          //此处的target与上面拖拽的target是同一目标，故其params.left,params.top可以共用，也必须共用
+          //初始化宽高
+          params.width = getCss(target, "width");
+          params.height = getCss(target, "height");
+          //初始化坐标
+          if(getCss(target, "left") !== "auto"){
+            params.left = getCss(target, "left");
+          }
+          if(getCss(target, "top") !== "auto"){
+            params.top = getCss(target, "top");
+          }
+          //target是移动对象
+          point.onmousedown = function(event){
+            params.kind = kind;
+            params.flag = true;
+            if(!event){
+              event = window.event;
+            }
+            var e = event;
+            params.currentX = e.clientX;
+            params.currentY = e.clientY;
+            //防止IE文字选中，有助于拖拽平滑
+            point.onselectstart = function(){
+              return false;
+            }
+          };
+          document.onmouseup = function(){
+            params.flag = false;
+            if(getCss(target, "left") !== "auto"){
+              params.left = getCss(target, "left");
+            }
+            if(getCss(target, "top") !== "auto"){
+              params.top = getCss(target, "top");
+            }
+            params.width = getCss(target, "width");
+            params.height = getCss(target, "height");
+
+            //给隐藏文本框赋值
+            posX = parseInt(target.style.left);
+            posY = parseInt(target.style.top);
+            cropW = parseInt(target.style.width);
+            cropH = parseInt(target.style.height);
+            if(posX < 0){
+              posX = 0;
+            }
+            if(posY < 0){
+              posY = 0;
+            }
+            if((posX + cropW) > iCurWidth){
+              cropW = iCurWidth - posX;
+            }
+            if((posY + cropH) > iCurHeight){
+              cropH = iCurHeight - posY;
+            }
+            //比例计算
+            posX = posX / scaleX;
+            posY /= scaleY;
+            cropW /= scaleX;
+            cropH /= scaleY;
+            //赋值
+            ID("cropPosX").value = posX;
+            ID("cropPosY").value = posY;
+            ID("cropImageWidth").value = cropW;
+            ID("cropImageHeight").value = cropH;
+          };
+          document.onmousemove = function(event){
+            var e = event ? event: window.event;
+            if(params.flag){
+              var nowX = e.clientX, nowY = e.clientY;
+              var disX = nowX - params.currentX, disY = nowY - params.currentY;
+              if(params.kind === "n"){
+                //上拉伸
+                //高度增加或减小，位置上下移动
+                target.style.top = parseInt(params.top) + disY + "px";
+                target.style.height = parseInt(params.height) - disY + "px";
+              }else if(params.kind === "w"){//左拉伸
+                target.style.left = parseInt(params.left) + disX + "px";
+                target.style.width = parseInt(params.width) - disX + "px";
+              }else if(params.kind === "e"){//右拉伸
+                target.style.width = parseInt(params.width) + disX + "px";
+              }else if(params.kind === "s"){//下拉伸
+                target.style.height = parseInt(params.height) + disY + "px";
+              }else if(params.kind === "nw"){//左上拉伸
+                target.style.left = parseInt(params.left) + disX + "px";
+                target.style.width = parseInt(params.width) - disX + "px";
+                target.style.top = parseInt(params.top) + disY + "px";
+                target.style.height = parseInt(params.height) - disY + "px";
+              }else if(params.kind === "ne"){//右上拉伸
+                target.style.top = parseInt(params.top) + disY + "px";
+                target.style.height = parseInt(params.height) - disY + "px";
+                //右
+                target.style.width = parseInt(params.width) + disX + "px";
+              }else if(params.kind === "sw"){//左下拉伸
+                target.style.left = parseInt(params.left) + disX + "px";
+                target.style.width = parseInt(params.width) - disX + "px";
+                //下
+                target.style.height = parseInt(params.height) + disY + "px";
+              }else if(params.kind === "se"){//右下拉伸
+                target.style.width = parseInt(params.width) + disX + "px";
+                target.style.height = parseInt(params.height) + disY + "px";
+              }else{//移动
+                target.style.left = parseInt(params.left) + disX + "px";
+                target.style.top = parseInt(params.top) + disY + "px";
+              }
+            }
+          }
+        }
+        //绑定拖拽
+        startDrag(ID("zxxDragBg"),ID("zxxCropBox"),"drag");
+        //绑定拉伸
+        startDrag(ID("dragLeftTop"),ID("zxxCropBox"),"nw");
+        startDrag(ID("dragLeftBot"),ID("zxxCropBox"),"sw");
+        startDrag(ID("dragRightTop"),ID("zxxCropBox"),"ne");
+        startDrag(ID("dragRightBot"),ID("zxxCropBox"),"se");
+        startDrag(ID("dragTopCenter"),ID("zxxCropBox"),"n");
+        startDrag(ID("dragBotCenter"),ID("zxxCropBox"),"s");
+        startDrag(ID("dragRightCenter"),ID("zxxCropBox"),"e");
+        startDrag(ID("dragLeftCenter"),ID("zxxCropBox"),"w");
+      }
+    }
+    */
+  },
+  watch: {
+    'lableObj'(val,old){
+      if(val){
+        this.$emit('setBtnState',val)
+      }
+    }
   }
 }
 </script>
@@ -846,9 +1335,18 @@ export default {
   position: relative;
   #imgSvg{
     position: relative;
+    align-self: center;
+    justify-self: center;
     image{
       display: block;
     }
+  }
+  .svg-wrapper{
+    width: 100%;
+    @include scrollClass();
+    overflow: auto;
+    height: 100%;
+    display: grid;
   }
   .svgFont{
     font-weight: bold;
@@ -858,6 +1356,39 @@ export default {
   }
   .stopDraw{
     cursor: pointer;
+  }
+  .crosshair{
+    cursor: crosshair;
+  }
+  .pointer{
+    cursor: pointer;
+  }
+  .openfixImg{
+    position: relative;
+    .imgDiv-wrapper{
+      position: absolute;
+      top: 0;
+      right: 0;
+
+    }
+  }
+  .seResize{
+    cursor: se-resize;
+  }
+  .neResize{
+    cursor: ne-resize;
+  }
+  .mouse--move{
+    cursor: move;
+  }
+}
+.text_animation{
+  animation: blink 1s 2;
+}
+@keyframes blink{
+  50% {
+    fill: red;
+    r:8;
   }
 }
 </style>
